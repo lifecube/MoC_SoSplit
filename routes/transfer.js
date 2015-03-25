@@ -11,7 +11,7 @@ router.post('/', function(req, res, next) {
   var transferId = uuid.v1();
   var transfers = req.app.locals.transfers;
   transfers[transferId] = req.body;
-  var transUrl = 'http://sosplit.herokuapp.com:3000/send/' + transferId;
+  var transUrl = 'http://sosplit.herokuapp.com/send/' + transferId;
   request.post({
     url: 'https://graph.facebook.com/v2.2/me/sosplit:split?access_token=' + req.body.post.accessToken,
     form: {
@@ -22,7 +22,7 @@ router.post('/', function(req, res, next) {
         'og:type': 'sosplit:bill',
         'og:image': 'https://fbcdn-photos-c-a.akamaihd.net/hphotos-ak-xpa1/t39.2081-0/p128x128/11057103_1583262395289591_101451603_n.png',
         'og:description': 'Click this to send money back to your friend.',
-        'al:web:url':'http://sosplit.herokuapp.com:3000/send/test1',
+        'al:web:url':'http://sosplit.herokuapp.com/send/test1',
         'al:web:should_fallback':true
       })
     }
