@@ -14,7 +14,7 @@
         {{#each transfer.requests}}
           <div class="item" data-value="{{id}}">
             <img class="ui avatar image tiny" src="{{photoUrl}}"><span>{{display}}</span>
-              <label class="ui teal label">{{amount}}</label>
+              <label class="ui teal label">$ {{amount}}</label>
           </div>
         {{/each}}
       </div>
@@ -47,7 +47,7 @@
   </div>
 
   <div class="fluid ui primary huge footer button">
-      <i class="send outline icon"></i> Send
+      <i class="send outline icon"></i> Send to {{transfer.receiver.display}}
   </div>
 </div>
 
