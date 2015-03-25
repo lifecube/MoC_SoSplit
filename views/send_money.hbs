@@ -1,0 +1,56 @@
+<div class="ui leaderboard test ad" data-text="SoSplit">
+
+</div>
+
+<div class="ui form">
+  <div class="field">
+    <label>Choose who you pay for:</label>
+    <div class="ui selection dropdown">
+      <input type="hidden" name="payfor" value="{{transfer.requests.0.id}}">
+      <div class="text">
+      </div>
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        {{#each transfer.requests}}
+          <div class="item" data-value="{{id}}">
+            <img class="ui avatar image tiny" src="{{photoUrl}}"><span>{{display}}</span>
+              <label class="ui teal label">{{amount}}</label>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="ui left icon input">
+      <input type="text" placeholder="Card holder name">
+      <i class="pink user icon"></i>
+    </div>
+  </div>
+  <div class="field">
+    <div class="ui left icon input">
+      <input type="text" placeholder="Card number">
+      <i class="pink payment icon"></i>
+    </div>
+  </div>
+  <div class="field">
+    <div class="ui left icon input">
+      <input type="text" placeholder="MM/YY">
+      <i class="pink calendar outline icon"></i>
+    </div>
+  </div>
+  <div class="field">
+    <div class="ui left icon input">
+      <input type="text" placeholder="CVC">
+      <i class="pink lock icon"></i>
+    </div>
+  </div>
+
+  <div class="fluid ui primary huge footer button">
+      <i class="send outline icon"></i> Send
+  </div>
+</div>
+
+<script>
+$('.ui.dropdown').dropdown();
+</script>
