@@ -22,8 +22,7 @@ router.post('/', function(req, res, next) {
         'og:type': 'sosplit:bill',
         'og:image': 'https://fbcdn-photos-c-a.akamaihd.net/hphotos-ak-xpa1/t39.2081-0/p128x128/11057103_1583262395289591_101451603_n.png',
         'og:description': 'Click this to send money back to your friend.',
-        'al:web:url':'http://sosplit.herokuapp.com/send/test1',
-        'al:web:should_fallback':true
+        'fb:app_id': 1566586846957146
       })
     }
   }, function(error, response, body) {
