@@ -5,6 +5,7 @@ var request = require('request');
 var OAuth = require('mashape-oauth').OAuth;
 var sha1 = require('sha1');
 var base64 = require('base64-js');
+var xml2js = require('xml2js');
 
 var CONSUMER_SECRET = '-----BEGIN RSA PRIVATE KEY-----\n' +
 'MIIEpAIBAAKCAQEAzNn6rvOq9fMADEwtrddWmCeuRowp6jz5ERHXhv7xH6DRZGmo\n' +
@@ -106,66 +107,76 @@ router.post('/', function(req, res, next) {
   });
 });
 
-var constructMoneySend = function(sender, card, receiver, amount) {
-  var bodyXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-  '<TransferRequest>\n' +
-  '    <LocalDate>0612</LocalDate>\n' +
-  '    <LocalTime>161222</LocalTime>\n' +
-  '    <TransactionReference>4000000001010101012</TransactionReference>\n' +
-  '    <SenderName>John Doe</SenderName>\n' +
-  '    <SenderAddress>\n' +
-  '        <Line1>123 Main Street</Line1>\n' +
-  '        <Line2>#5A</Line2>\n' +
-  '        <City>Arlington</City>\n' +
-  '        <CountrySubdivision>VA</CountrySubdivision>\n' +
-  '        <PostalCode>22207</PostalCode>\n' +
-  '        <Country>USA</Country>\n' +
-  '    </SenderAddress>\n' +
-  '    <FundingCard>\n' +
-  '        <AccountNumber>5184680430000006</AccountNumber>\n' +
-  '        <ExpiryMonth>11</ExpiryMonth>\n' +
-  '        <ExpiryYear>2017</ExpiryYear>\n' +
-  '    </FundingCard>\n' +
-  '    <FundingUCAF>MjBjaGFyYWN0ZXJqdW5rVUNBRjU=1111</FundingUCAF>\n' +
-  '    <FundingMasterCardAssignedId>123456</FundingMasterCardAssignedId>\n' +
-  '    <FundingAmount>\n' +
-  '         <Value>15000</Value>\n' +
-  '        <Currency>840</Currency>\n' +
-  '    </FundingAmount>\n' +
-  '    <ReceiverName>Jose Lopez</ReceiverName>\n' +
-  '    <ReceiverAddress>\n' +
-  '        <Line1>Pueblo Street</Line1>\n' +
-  '        <Line2>PO BOX 12</Line2>\n' +
-  '        <City>El PASO</City>\n' +
-  '        <CountrySubdivision>TX</CountrySubdivision>\n' +
-  '        <PostalCode>79906</PostalCode>\n' +
-  '        <Country>USA</Country>\n' +
-  '    </ReceiverAddress>\n' +
-  '    <ReceiverPhone>1800639426</ReceiverPhone>\n' +
-  '    <ReceivingCard>\n' +
-  '        <AccountNumber>5184680430000014</AccountNumber>\n' +
-  '    </ReceivingCard>\n' +
-  '    <ReceivingAmount>\n' +
-  '        <Value>182206</Value>\n' +
-  '        <Currency>484</Currency>\n' +
-  '    </ReceivingAmount>\n' +
-  '    <Channel>W</Channel>\n' +
-  '    <UCAFSupport>true</UCAFSupport>\n' +
-  '    <ICA>009674</ICA>\n' +
-  '    <ProcessorId>9000000442</ProcessorId>\n' +
-  '    <RoutingAndTransitNumber>990442082</RoutingAndTransitNumber>\n' +
-  '    <CardAcceptor>\n' +
-  '        <Name>My Local Bank</Name>\n' +
-  '        <City>Saint Louis</City>\n' +
-  '        <State>MO</State>\n' +
-  '        <PostalCode>63101</PostalCode>\n' +
-  '        <Country>USA</Country>\n' +
-  '    </CardAcceptor>\n' +
-  '    <TransactionDesc>P2P</TransactionDesc>\n' +
-  '    <MerchantId>123456</MerchantId>\n' +
-  '</TransferRequest>';
-  return bodyXml;
+var mcAPIConstructMoneySend = function(sender, card, transfer.receiver, sender.amount) {
+
+    var transferReq =
+    {
+        TransferRequest: {
+            LocalDate: "1212",
+            LocalTime:  "161222",
+            TransactionReference: "0999999034810151383",
+            SenderName: "John Doe",
+            SenderAddress: {
+                Line1:"123 Main Street",
+              //  Line2: line2 = "#5A",
+                City:"Arlington",
+                CountrySubdivision:"VA",
+                PostalCode:"22207",
+                Country:"USA"
+            },
+            FundingCard: {
+                AccountNumber:"5184680430000006",
+                ExpiryMonth:"11",
+                ExpiryYear:"2016"
+            },
+            //FundingUCAF: fundingUCAF = "MjBjaGFyYWN0ZXJqdW5rVUNBRjU=1111",
+            //FundingMasterCardAssignedId: fundingMasterCardAssignedId = "123456",
+            FundingAmount: {
+                Value:"15503",
+                Currency:"702"
+            },
+            ReceiverName:"Jose Lopez",
+            ReceiverAddress: {
+                Line1:"Pueblo Street",
+              //  Line2: line2 = "PO BOX 12",
+              //  City: city = "El PASO",
+              //  CountrySubdivision: countrySubdivision = "TX",
+              //  PostalCode: postalCode = "79906",
+              //  Country: country = "USA"
+            },
+            //ReceiverPhone: receiverPhone = "1800639426",
+            ReceivingCard: {
+                AccountNumber:"5184680430000014"
+            },
+            ReceivingAmount: {
+                Value:"182206",
+                Currency: "702"
+            },
+            Channel:  "W",
+            UCAFSupport:"true",
+            ICA:"009674",
+            ProcessorId:"9000000442",
+            RoutingAndTransitNumber:"990442082",
+            CardAcceptor: {
+                Name:"My Local Bank",
+                City:"Saint Louis",
+                State:"MO",
+                //PostalCode:"63101",
+                Country:"USA"
+            },
+            TransactionDesc: "P2P",
+            //MerchantId: merchantId = "123456"
+        }
+    };
+
+
+    var builder = new XML2JS.Builder();
+    var body = builder.buildObject(transferReq);
+
+
+  return body;
 };
+
 
 router.put('/:transferId/send', function(req, res, next) {
   var transferId = req.param('transferId');
@@ -173,7 +184,7 @@ router.put('/:transferId/send', function(req, res, next) {
   var transfer = transfers[transferId];
   var sender = findSender(transfer, req.body.sender.id);
 
-  var moneySendBody = constructMoneySend(sender, card, transfer.receiver, sender.amount);
+  var moneySendBody = mcAPIConstructMoneySend(sender, card, transfer.receiver, sender.amount);
 
   var oa = new OAuth(MONEYSEND_OAUTH_OPTIONS, function() {/*swallow*/});
   oa.post({
