@@ -9,8 +9,6 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var sendmoney = require('./routes/sendmoney');
 var transfer = require('./routes/transfer');
-var testtransfer = require ('./routes/testtransfer');
-
 
 var app = express();
 app.locals.transfers = {};
@@ -60,8 +58,6 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/send', sendmoney);
 app.use('/transfers', transfer);
-app.use('/testtransfer',testtransfer);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

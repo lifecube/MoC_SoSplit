@@ -191,7 +191,7 @@ router.put('/:transferId/send', function(req, res, next) {
     oauth_body_hash: base64.fromByteArray(sha1(moneySendBody, {asBytes: true}))
   }, function(code, responseBody, request) {
     console.log('rbody: ', responseBody);
-    var comment = 'Thanks ' + sender.display + ' to send me back the money.';
+    var comment = 'Thank ' + sender.display + ' to send me back the money.';
     addCommentToFacebook(transfer.post.accessToken, transfer.post.postId, comment, function(error, response, body) {
       if (!error && response.statusCode == 200) {
         var responseJSON = JSON.parse(body);

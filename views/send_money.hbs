@@ -2,7 +2,7 @@
 
 </div>
 
-<div class="ui form">
+<div id="form" class="ui form">
   <div class="field">
     <label>Choose who you pay for:</label>
     <div class="ui selection dropdown">
@@ -53,6 +53,15 @@
   </div>
 </div>
 
+<div id="result" class="ui center aligned segment" style="display:none;">
+  <div class="ui pink icon header">
+      <i class="empty heart icon"></i>
+      <div class="content">
+        Thank You!
+      </div>
+    </div>
+</div>
+
 <script>
 $('.ui.dropdown').dropdown();
 
@@ -81,7 +90,8 @@ $('#submit').click(function(event) {
     data: JSON.stringify(moneySend)
   }).always(function(data) {
     //it's demo, let's make it simple
-    window.close();
+    $('#form').hide();
+    $('#result').show();
   });
 });
 
