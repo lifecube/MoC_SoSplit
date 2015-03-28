@@ -169,7 +169,7 @@ var buildMoneySendReq = function(card, fundingAmt) {
     }
 };
 
-  var builder = new XML2JS.Builder();
+  var builder = new xml2js.Builder();
   var body = builder.buildObject(transferReq);
 
   return body;
