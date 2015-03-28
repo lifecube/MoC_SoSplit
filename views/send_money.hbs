@@ -56,8 +56,8 @@
 <script>
 $('.ui.dropdown').dropdown();
 
-$('#submit').click(function() {
-  
+$('#submit').click(function(event) {
+  $(this).toggleClass('disabled');
 });
 
 $('#cardHolderName').keypress(function(event) {
