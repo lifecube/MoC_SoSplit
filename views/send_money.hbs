@@ -6,7 +6,7 @@
   <div class="field">
     <label>Choose who you pay for:</label>
     <div class="ui selection dropdown">
-      <input type="hidden" name="payfor" value="{{transfer.requests.0.id}}">
+      <input type="hidden" id="payfor" value="{{transfer.requests.0.id}}">
       <div class="text">
       </div>
       <i class="dropdown icon"></i>
@@ -25,34 +25,49 @@
 
   <div class="field">
     <div class="ui left icon input">
-      <input type="text" placeholder="Card holder name">
+      <input type="text" id="cardHolderName" placeholder="Card holder name">
       <i class="pink user icon"></i>
     </div>
   </div>
   <div class="field">
     <div class="ui left icon input">
-      <input type="text" placeholder="Card number">
+      <input type="text" id="cardNumber" placeholder="Card number">
       <i class="pink payment icon"></i>
     </div>
   </div>
   <div class="field">
     <div class="ui left icon input">
-      <input type="text" placeholder="MM/YY">
+      <input type="text" id="cardExpireDate" placeholder="MM/YY">
       <i class="pink calendar outline icon"></i>
     </div>
   </div>
   <div class="field">
     <div class="ui left icon input">
-      <input type="text" placeholder="CVC">
+      <input type="text" id="cardCVC" placeholder="CVC">
       <i class="pink lock icon"></i>
     </div>
   </div>
 
-  <div class="fluid ui primary huge footer button">
+  <div class="fluid ui primary huge footer button" id="submit">
       <i class="send outline icon"></i> Send to {{transfer.receiver.display}}
   </div>
 </div>
 
 <script>
 $('.ui.dropdown').dropdown();
+
+$('#submit').click(function(event) {
+  $(this).toggleClass('disabled');
+});
+
+$('#cardHolderName').keypress(function(event) {
+  if (event.keyCode == 42) {
+    //if it's *, we auto fill for demo
+    $('#cardHolderName').val('TANG Hao');
+    $('#cardNumber').val('5184680430000006');
+    $('#cardExpireDate').val('11/17');
+    $('#cardCVC').val('838');
+    this.blur();
+  }
+});
 </script>
