@@ -106,7 +106,7 @@ router.post('/', function(req, res, next) {
   });
 });
 
-var constructMoneySend = function(sender, receiver, amount) {
+var constructMoneySend = function(sender, card, receiver, amount) {
   var bodyXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<TransferRequest>\n' +
   '    <LocalDate>0612</LocalDate>\n' +
@@ -173,7 +173,7 @@ router.put('/:transferId/send', function(req, res, next) {
   var transfer = transfers[transferId];
   var sender = findSender(transfer, req.body.sender.id);
 
-  var moneySendBody = constructMoneySend(sender, transfer.receiver, sender.amount);
+  var moneySendBody = constructMoneySend(sender, card, transfer.receiver, sender.amount);
 
   var oa = new OAuth(MONEYSEND_OAUTH_OPTIONS, function() {/*swallow*/});
   oa.post({
