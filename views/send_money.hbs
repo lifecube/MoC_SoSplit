@@ -58,6 +58,31 @@ $('.ui.dropdown').dropdown();
 
 $('#submit').click(function(event) {
   $(this).toggleClass('disabled');
+  var expire = $('#cardExpireDate').val();
+  var expires = expire.split('/');
+  var moneySend = {
+    sender: {
+      id: $('#payfor').val()
+    },
+    card: {
+      holder: $('#cardHolderName').val(),
+      number: $('#cardNumber').val(),
+      expiryMonth: expires[0],
+      expiryYear: '20'+expires[1],
+      cvc: $('#cardCVC').val()
+    }
+  };
+
+  $.ajax({
+    url: '../transfers/{{transferId}}/send',
+    method: 'PUT',
+    contentType: 'application/json',
+    dataType: 'json',
+    data: JSON.stringify(moneySend)
+  }).done(function(data) {
+    console.log(data);
+    alert('thank you for sending money.');
+  });
 });
 
 $('#cardHolderName').keypress(function(event) {
