@@ -8,6 +8,7 @@ var OAuth = require('mashape-oauth').OAuth;
 var sha1 = require('sha1');
 var base64 = require('base64-js');
 var xml2js = require('xml2js');
+//var dateUtils = require('date-utils');
 
 
 var CONSUMER_SECRET = '-----BEGIN RSA PRIVATE KEY-----\n' +
@@ -50,12 +51,22 @@ var MONEYSEND_OAUTH_OPTIONS = {
 var router = express.Router();
 var mcAPIConstructMoneySend = function(sender, receiver, amount) {
 
+  //var localDate = dateUtils.toFormat("DDMM");
+  //var localDate = now.format("mmdd");
+
+  //console.log("localDate::"+localDate);
+   //console.log("localTime::"+localTime);*/
+  var txnRef ="039999"+Date.now();
+
+  console.log("txnRef::"+txnRef);
+
+
     var transferReq =
     {
         TransferRequest: {
             LocalDate: "1212",
             LocalTime:  "161222",
-            TransactionReference: "0999999034810151383",
+            TransactionReference: txnRef,
             SenderName: "John Doe",
             SenderAddress: {
                 Line1:"123 Main Street",
@@ -109,7 +120,7 @@ var mcAPIConstructMoneySend = function(sender, receiver, amount) {
             //MerchantId: merchantId = "123456"
         }
     };
-    var temp = transferReq;
+    //var temp = transferReq;
 
     var builder = new XML2JS.Builder();
     var body = builder.buildObject(transferReq);
@@ -138,7 +149,7 @@ var oa = new OAuth(MONEYSEND_OAUTH_OPTIONS, function() {/*swallow*/});
     oauth_body_hash: base64.fromByteArray(sha1(moneySendBody, {asBytes: true}))
   }, function(code, responseBody, request) {
     console.log('rbody: ', responseBody);
-  
+
   });
 
 /*  var service = new transferServiceClass.TransferService(

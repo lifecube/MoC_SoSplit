@@ -107,65 +107,68 @@ router.post('/', function(req, res, next) {
   });
 });
 
-var mcAPIConstructMoneySend = function(sender, card, transfer.receiver, sender.amount) {
+var buildMoneySendReq = function(card,fundingAmt) {
 
+
+   var txnRef ="039999"+Date.now();
     var transferReq =
+
     {
         TransferRequest: {
-            LocalDate: "1212",
-            LocalTime:  "161222",
-            TransactionReference: "0999999034810151383",
-            SenderName: "John Doe",
+            LocalDate: '1212',
+            LocalTime:  '161222',
+            TransactionReference: txnRef,
+            SenderName: card.holder,
             SenderAddress: {
-                Line1:"123 Main Street",
-              //  Line2: line2 = "#5A",
-                City:"Arlington",
-                CountrySubdivision:"VA",
-                PostalCode:"22207",
-                Country:"USA"
+                Line1:'123 Main Street',
+              //  Line2: line2 = '#5A',
+                City:'Arlington',
+                CountrySubdivision:'VA',
+                PostalCode:'22207',
+                Country:'USA'
             },
             FundingCard: {
-                AccountNumber:"5184680430000006",
-                ExpiryMonth:"11",
-                ExpiryYear:"2016"
+                AccountNumber:card.number,
+                ExpiryMonth:card.expiryMonth,
+                ExpiryYear:card.expiryYear
             },
-            //FundingUCAF: fundingUCAF = "MjBjaGFyYWN0ZXJqdW5rVUNBRjU=1111",
-            //FundingMasterCardAssignedId: fundingMasterCardAssignedId = "123456",
+            //FundingUCAF: fundingUCAF = 'MjBjaGFyYWN0ZXJqdW5rVUNBRjU=1111',
+            //FundingMasterCardAssignedId: fundingMasterCardAssignedId = '123456',
             FundingAmount: {
-                Value:"15503",
-                Currency:"702"
+                Value:fundingAmt,
+                Currency:'702'
             },
-            ReceiverName:"Jose Lopez",
+            ReceiverName:'Jose Lopez',
             ReceiverAddress: {
-                Line1:"Pueblo Street",
-              //  Line2: line2 = "PO BOX 12",
-              //  City: city = "El PASO",
-              //  CountrySubdivision: countrySubdivision = "TX",
-              //  PostalCode: postalCode = "79906",
-              //  Country: country = "USA"
+                Line1:'Pueblo Street',
+              //  Line2: line2 = 'PO BOX 12',
+              //  City: city = 'El PASO',
+              //  CountrySubdivision: countrySubdivision = 'TX',
+              //  PostalCode: postalCode = '79906',
+              //  Country: country = 'USA'
             },
-            //ReceiverPhone: receiverPhone = "1800639426",
+            //ReceiverPhone: receiverPhone = '1800639426',
             ReceivingCard: {
-                AccountNumber:"5184680430000014"
+                AccountNumber:'5184680430000014'
             },
             ReceivingAmount: {
-                Value:"182206",
-                Currency: "702"
+                Value:'182206',
+                Currency: '702'
             },
-            Channel:  "W",
-            UCAFSupport:"true",
-            ICA:"009674",
-            ProcessorId:"9000000442",
-            RoutingAndTransitNumber:"990442082",
+            Channel:  'W',
+            UCAFSupport:'true',
+            ICA:'009674',
+            ProcessorId:'9000000442',
+            RoutingAndTransitNumber:'990442082',
             CardAcceptor: {
-                Name:"My Local Bank",
-                City:"Saint Louis",
-                State:"MO",
-                //PostalCode:"63101",
-                Country:"USA"
+                Name:'My Local Bank',
+                City:'Saint Louis',
+                State:'MO',
+                //PostalCode:'63101',
+                Country:'USA'
             },
-            TransactionDesc: "P2P",
-            //MerchantId: merchantId = "123456"
+            TransactionDesc: 'P2P',
+            //MerchantId: merchantId = '123456'
         }
     };
 
@@ -184,7 +187,7 @@ router.put('/:transferId/send', function(req, res, next) {
   var transfer = transfers[transferId];
   var sender = findSender(transfer, req.body.sender.id);
 
-  var moneySendBody = mcAPIConstructMoneySend(sender, card, transfer.receiver, sender.amount);
+  var moneySendBody = buildMoneySendReq(req.body.card,sender.amount);
 
   var oa = new OAuth(MONEYSEND_OAUTH_OPTIONS, function() {/*swallow*/});
   oa.post({
