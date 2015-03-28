@@ -47,23 +47,20 @@ var router = express.Router();
 
 var postToFacebook = function(accessToken, message, transUrl, callback) {
   var billObject = {
-    og: {
-      url: transUrl,
-      title: 'SoSplit: Easy Send Money',
-      type: 'sosplit:bill',
-      image: 'https://fbcdn-photos-c-a.akamaihd.net/hphotos-ak-xpa1/t39.2081-0/p128x128/11057103_1583262395289591_101451603_n.png',
-      description: 'Click this to send money back to your friend.'
-    },
-    fb: {
-      app_id: '1566586846957146'
-    }
+    'og:url': transUrl,
+    'og:title': 'SoSplit: Easy Send Money',
+    'og:type': 'sosplit:bill',
+    'og:image': 'https://fbcdn-photos-c-a.akamaihd.net/hphotos-ak-xpa1/t39.2081-0/p128x128/11057103_1583262395289591_101451603_n.png',
+    'og:description': 'Click this to send money back to your friend.',
+    'fb:app_id': '1566586846957146'
   };
 
   request.post({
     url: 'https://graph.facebook.com/v2.3/me/sosplit:split?access_token=' + accessToken,
     form: {
       message: message,
-      bill: JSON.stringify(billObject)
+      bill: JSON.stringify(billObject),
+      'fb:explicitly_shared': true
     }
   }, callback);
 };
@@ -176,7 +173,7 @@ router.put('/:transferId/send', function(req, res, next) {
   var transfer = transfers[transferId];
   var sender = findSender(transfer, req.body.sender.id);
 
-  var moneySendBody = constructMoneySend(sender, receiver, amount);
+  var moneySendBody = constructMoneySend(sender, transfer.receiver, sender.amount);
 
   var oa = new OAuth(MONEYSEND_OAUTH_OPTIONS, function() {/*swallow*/});
   oa.post({
