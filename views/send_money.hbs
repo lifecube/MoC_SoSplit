@@ -12,10 +12,12 @@
       <i class="dropdown icon"></i>
       <div class="menu">
         {{#each transfer.requests}}
-          <div class="item" data-value="{{id}}">
-            <img class="ui avatar image tiny" src="{{photoUrl}}"><span>{{display}}</span>
-              <label class="ui teal label">$ {{amount}}</label>
-          </div>
+          {{#unless sent}}
+            <div class="item" data-value="{{id}}">
+              <img class="ui avatar image tiny" src="{{photoUrl}}"><span>{{display}}</span>
+                <label class="ui teal label">$ {{amount}}</label>
+            </div>
+          {{/unless}}
         {{/each}}
       </div>
     </div>

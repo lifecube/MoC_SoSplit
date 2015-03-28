@@ -16,7 +16,7 @@ app.locals.transfers = {};
 //now we fake one transfer request data for page test
 app.locals.transfers.test1 = {
   post: {
-    postId: 'postId',
+    //postId: 'postId',
     accessToken: 'aasdasd'
   },
   receiver: {
@@ -35,9 +35,11 @@ app.locals.transfers.test1 = {
       id: 'facebookid3',
       photoUrl: 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpa1/v/t1.0-1/c27.0.160.160/p160x160/29938_394627044101_2116227_n.jpg?oh=1235dcd62abfbf2dd95c0bcbcbc32c75&oe=5554E756&__gda__=1430884371_96edc87cad7ab410692f08bb25db5f46',
       display: 'display name3',
-      amount: 3.5
+      amount: 3.5,
+      sent: true
     }
-  ]
+  ],
+  message: 'sadadad'
 };
 
 // view engine setup
