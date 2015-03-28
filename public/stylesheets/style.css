@@ -10,3 +10,19 @@
 .ui.test.ad[data-text]:after {
   font-size: 3em;
 }
+
+#title {
+  background-color: #FF9900;
+}
+
+#title img {
+  display: inline-block;
+}
+
+#title .content {
+  line-height: 80px;
+  height: 80px;
+  color: white;
+  font-weight: bold;
+  font-size: xx-large;
+}

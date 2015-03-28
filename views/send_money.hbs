@@ -1,5 +1,10 @@
-<div class="ui leaderboard test ad" data-text="SoSplit">
-
+<div id="title" class="ui center aligned segment">
+  <div class="ui header">
+    <img src="https://fbcdn-photos-c-a.akamaihd.net/hphotos-ak-xpa1/t39.2081-0/p128x128/11057103_1583262395289591_101451603_n.png" class="ui tiny image">
+    <div class="content">
+      SoSplit
+    </div>
+  </div>
 </div>
 
 <div id="form" class="ui form">
@@ -14,7 +19,7 @@
         {{#each transfer.requests}}
           {{#unless sent}}
             <div class="item" data-value="{{id}}">
-              <img class="ui avatar image tiny" src="{{photoUrl}}"><span>{{display}}</span>
+              <img class="ui avatar image tiny" src="{{photoUrl}}"></img><span>{{display}}</span>
                 <label class="ui teal label">$ {{amount}}</label>
             </div>
           {{/unless}}
