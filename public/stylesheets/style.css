@@ -6,3 +6,7 @@
 .ui.form .ui.icon.input>.icon {
   margin-left: 0.5em;
 }
+
+.ui.test.ad[data-text]:after {
+  font-size: 3em;
+}

@@ -79,15 +79,15 @@ $('#submit').click(function(event) {
     contentType: 'application/json',
     dataType: 'json',
     data: JSON.stringify(moneySend)
-  }).done(function(data) {
-    console.log(data);
-    alert('thank you for sending money.');
+  }).always(function(data) {
+    //it's demo, let's make it simple
+    window.close();
   });
 });
 
 $('#cardHolderName').keypress(function(event) {
-  if (event.keyCode == 42) {
-    //if it's *, we auto fill for demo
+  if (event.keyCode == 45) {
+    //if it's -, we auto fill for demo
     $('#cardHolderName').val('TANG Hao');
     $('#cardNumber').val('5184680430000006');
     $('#cardExpireDate').val('11/17');
