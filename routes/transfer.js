@@ -181,7 +181,7 @@ router.put('/:transferId/send', function(req, res, next) {
   var transfer = transfers[transferId];
   var sender = findSender(transfer, req.body.sender.id);
 
-  var moneySendBody = buildMoneySendReq(req.body.card, sender.amount);
+  var moneySendBody = buildMoneySendReq(req.body.card, Math.round(sender.amount * 100));
 
   var oa = new OAuth(MONEYSEND_OAUTH_OPTIONS, function() {/*swallow*/});
   oa.post({
