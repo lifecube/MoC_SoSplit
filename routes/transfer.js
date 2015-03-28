@@ -54,7 +54,7 @@ router.post('/', function(req, res, next) {
   transfers[transferId] = req.body;
   var transUrl = 'http://sosplit.herokuapp.com/send/' + transferId;
   request.post({
-    url: 'https://graph.facebook.com/v2.2/me/sosplit:split?access_token=' + req.body.post.accessToken,
+    url: 'https://graph.facebook.com/v2.3/me/sosplit:split?access_token=' + req.body.post.accessToken,
     form: {
       message: req.body.message,
       bill: JSON.stringify({
@@ -67,10 +67,16 @@ router.post('/', function(req, res, next) {
       })
     }
   }, function(error, response, body) {
-    console.log(response);
-    res.json({
-      transferId: transferId
-    });
+    if (!error && response.statusCode == 200) {
+      //save the postId
+      transfers[transferId].post.postId = body.id;
+      res.json({
+        transferId: transferId,
+        postId: body.id
+      });
+    }else {
+      res.status(500).send('Something wrong on posting to facebook wall.');
+    }
   });
 });
 
