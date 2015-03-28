@@ -45,6 +45,47 @@ var MONEYSEND_OAUTH_OPTIONS = {
 
 var router = express.Router();
 
+var postToFacebook = function(accessToken, message, transUrl, callback) {
+  var billObject = {
+    og: {
+      url: transUrl,
+      title: 'SoSplit: Easy Send Money',
+      type: 'sosplit:bill',
+      image: 'https://fbcdn-photos-c-a.akamaihd.net/hphotos-ak-xpa1/t39.2081-0/p128x128/11057103_1583262395289591_101451603_n.png',
+      description: 'Click this to send money back to your friend.'
+    },
+    fb: {
+      app_id: '1566586846957146'
+    }
+  };
+
+  request.post({
+    url: 'https://graph.facebook.com/v2.3/me/sosplit:split?access_token=' + accessToken,
+    form: {
+      message: message,
+      bill: JSON.stringify(billObject)
+    }
+  }, callback);
+};
+
+var addCommentToFacebook = function(accessToken, postId, comment, callback) {
+  request.post({
+    url: 'https://graph.facebook.com/v2.3/' + postId + '/comments?access_token=' + accessToken,
+    form: {
+      message: comment
+    }
+  }, callback);
+};
+
+var findSender = function(transfer, senderId) {
+  var requests = transfer.requests;
+  for (i = 0; i < requests.length; i++) {
+    if (requests[i].id == senderId) {
+      return requests[i];
+    }
+  }
+};
+
 /* Create transfer request. */
 router.post('/', function(req, res, next) {
   console.log('POST /transfers', req.body);
@@ -53,26 +94,14 @@ router.post('/', function(req, res, next) {
   var transfers = req.app.locals.transfers;
   transfers[transferId] = req.body;
   var transUrl = 'http://sosplit.herokuapp.com/send/' + transferId;
-  request.post({
-    url: 'https://graph.facebook.com/v2.3/me/sosplit:split?access_token=' + req.body.post.accessToken,
-    form: {
-      message: req.body.message,
-      bill: JSON.stringify({
-        'og:url': transUrl,
-        'og:title': 'SoSplit: Easy Send Money',
-        'og:type': 'sosplit:bill',
-        'og:image': 'https://fbcdn-photos-c-a.akamaihd.net/hphotos-ak-xpa1/t39.2081-0/p128x128/11057103_1583262395289591_101451603_n.png',
-        'og:description': 'Click this to send money back to your friend.',
-        'fb:app_id': 1566586846957146
-      })
-    }
-  }, function(error, response, body) {
+  postToFacebook(req.body.post.accessToken, req.body.message, transUrl, function(error, response, body) {
     if (!error && response.statusCode == 200) {
+      var responseJSON = JSON.parse(body);
       //save the postId
-      transfers[transferId].post.postId = body.id;
+      transfers[transferId].post.postId = responseJSON.id;
       res.json({
         transferId: transferId,
-        postId: body.id
+        postId: responseJSON.id
       });
     }else {
       res.status(500).send('Something wrong on posting to facebook wall.');
@@ -142,6 +171,10 @@ var constructMoneySend = function(sender, receiver, amount) {
 };
 
 router.put('/:transferId/send', function(req, res, next) {
+  var transferId = req.param('transferId');
+  var transfers = req.app.locals.transfers;
+  var transfer = transfers[transferId];
+  var sender = findSender(transfer, req.body.sender.id);
 
   var moneySendBody = constructMoneySend(sender, receiver, amount);
 
@@ -153,10 +186,18 @@ router.put('/:transferId/send', function(req, res, next) {
     oauth_body_hash: base64.fromByteArray(sha1(moneySendBody, {asBytes: true}))
   }, function(code, responseBody, request) {
     console.log('rbody: ', responseBody);
-    done();
+    var comment = 'Thanks ' + sender.display + ' to send me back the money.';
+    addCommentToFacebook(transfer.post.accessToken, transfer.post.postId, comment, function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var responseJSON = JSON.parse(body);
+        //save the postId
+        sender.sent = true;
+        res.status(200).end();
+      }else {
+        res.status(500).send('Something wrong on posting to facebook wall.');
+      }
+    });
   });
-
-  res.status(200).end();
 });
 
 module.exports = router;
